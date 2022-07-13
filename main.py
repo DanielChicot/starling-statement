@@ -22,13 +22,13 @@ async def main() -> None:
     async with await starling_session() as session:
         entries = await flow(account_uuid(session),
                              map_(resource),
-                             # bind(lambda url: statement(session, url)),
                              bind(lambda url: statement(session, url)),
                              map_(lambda x: x.split('\n')),
                              map_(drop(1)),
                              map_(partial(filter, lambda x: len(x) > 0)),
                              map_(split),
                              map_(partial(map, get([0, 1, 4, 5]))),
+                             map_(partial(map, partial(map, lambda x: x.strip()))),
                              map_(partial(map, ','.join)),
                              map_('\n'.join))
 
